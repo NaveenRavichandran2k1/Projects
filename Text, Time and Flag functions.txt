@@ -1,0 +1,421 @@
+#Function 1 (Text manipulation)
+
+<#
+Name: Naveen Ravichandran
+
+Script Name: Get-TextManipulate
+
+Description:
+This script prompts the user to input parameters such as their name, preferred drink, size, and payment method. Based on these inputs, it generates a personalized message and displays it with a randomly chosen foreground color.
+
+Variable Definitions:
+- $Name: User's name.
+- $Drinks: Preferred drink, limited to "Hotchocolate", "Frenchvanilla", or "Mochaicecap".
+- $Size: Drink size, limited to "small", "medium", or "large".
+- $Paymentmethod: Payment method, limited to "card" or "cash".
+- $Check: Variable to determine the free cookie quantity based on the selected drink size.
+- $OrColor: Randomly chosen foreground color for displaying the message.
+
+Functions:
+- TextManipulate: 
+- Get-Random: Generates a random number to select the foreground color.
+
+Output:
+- Personalized message including user's name, selected drink, size, payment method, and a randomly determined free cookie quantity.
+
+References:
+1. about_Functions_Advanced_Parameters: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_parameters?view=powershell-7
+2. about_Switch: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_switch?view=powershell-7
+3. Get-Random: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-random?view=powershell-7
+4. about_Strings: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_strings?view=powershell-7
+#>
+
+
+
+
+function Get-TextManipulate {
+
+#[CmdletBinding()]: Indicates that the script supports common parameters.
+     [cmdletBinding()]
+    
+#[Parameter()]: Defines script parameters and specifies validation constraints.
+     param(
+     [Parameter(Mandatory=$true)]
+     [string]$Name,
+
+#[ValidateSet()]: Ensures that parameter values are limited to specific values.
+     [parameter(Mandatory=$true)]
+     [validateset("Hotchocolate", "Frenchvanilla", "Mochaicecap")]
+
+#[ValidateScript()]: Validates parameter values using a script block.
+     [validatescript({$_ -in "Hotchocolate", "Frenchvanilla", "Mochaicecap"})]
+     [string]$Drinks,
+#prompt for size
+     [parameter(Mandatory=$true)]
+     [validateset("small", "medium", "large")]
+     [validatescript({$_ -in "small", "medium", "large"})]
+     [string]$size,
+
+#prompt for paymentmethod
+     [parameter(Mandatory=$true)]
+     [validateset("card","cash")]
+     [validatescript({$_ -in "card", "cash"})]
+     [string]$Paymentmethod
+     )
+
+#Using switch to check the previous answer.
+     $check = switch ($size)
+     {
+     "small" {"one cookie"}
+     "medium" {"two cookie"}
+     "large" {"three cookie"} 
+     }
+
+#using Get-Random command for randomly color display.
+     $orcolor= Get-Random -Minimum 1 -Maximum 13
+     $Text="Hello $Name, You ordered $Drinks, size is $size, you payed by $Paymentmethod you got a $check free today, Have a good day!" 
+     Write-Host $Text -ForegroundColor $orcolor
+     }
+#call the function    
+     Get-TextManipulate
+
+
+
+#Function 2(Time Function)
+<#
+Name: Naveen Ravichandran
+
+Script Name: Get-Date_Time
+
+#>
+
+# Define a function to get a custom date based on the parameters provided
+function Get-Date_Time {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [int]$AddingDays,
+        [Parameter(Mandatory=$true)]
+        [int]$AddingMonths
+    )
+
+    # Get the current date and time
+    $CurrentDate = Get-Date
+
+    # Check if the current date is a meaningful date to you
+    if ($CurrentDate -eq [datetime]'2024-12-18') {
+        Write-Host "The current date $($CurrentDate.ToShortDateString())"
+        return
+    }
+
+    # Add the specified number of days and months to the current date
+    $OutputDate = $CurrentDate.AddDays($AddingDays).AddMonths($AddingMonths)
+
+    # Return the output date
+    $OutputDate
+}
+
+# Define a function to get a formatted date string
+function Get-FormattedDate {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [datetime]$Date
+    )
+
+    # Format the date string as desired
+    $FormattedDate = $Date.ToString("yyyy-MM-dd")
+
+    # Return the formatted date string
+    $FormattedDate
+}
+
+# Example usage of Get-Date_Time function
+$AddingDays = 0
+$AddingMonths = 0
+$NewDate = Get-Date_Time -AddingDays $AddingDays -AddingMonths $AddingMonths
+Write-Host "New Date after adding $AddingDays days and $AddingMonths months: $($NewDate.ToShortDateString())"
+
+# Example usage of Get-FormattedDate function
+$CustomDate = Get-Date "2024-03-24"  # Example date
+$FormattedCustomDate = Get-FormattedDate -Date $CustomDate
+Write-Host "Formatted Custom Date: $FormattedCustomDate"
+
+#call the function
+Get-Date_Time
+
+
+#Function 3 (Flag Function)
+
+<#
+Author: Naveen Ravichandran
+
+Script Name: Get-CountryFlag
+
+Description: 
+This script shows the different country flags and interesting facts of that particular country
+
+Variable Definitions:
+- $Country
+- $color
+- $fac
+
+Function:
+- Flag function
+- Get-Random
+
+Output:
+- show different flags with interesting facts
+- I like Austria because it is famous for coffee
+- I love Colombia because I love food
+- I adore Laos because I am nature lover
+- I love Canada because I love ice hockey
+
+References:
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-random?view=powershell-7.4&viewFallbackFrom=powershell-7.1
+#>
+
+#call the function
+function Get-CountryFlag {
+
+    param (
+        [string]$Country
+    )
+    $color = Get-Random -Minimum 1 -Maximum 13
+#using switch command
+
+    switch ($Country.ToLower()) {
+#Using Write-Host to show the flag and foreground, Background color to display
+        
+        "Austria"{
+        Write-Output "Below is the Austria flag:"
+                    Write-Host "AUAUAU" -ForegroundColor Red -BackgroundColor Red
+                    Write-Host "AUAUAU" -ForegroundColor White -BackgroundColor White 
+                    Write-Host "AUAUAU" -ForegroundColor Red -BackgroundColor Red
+                    Write-Host "Austria is famous for Coffee Houses. The famous drink Red Bull originated in Austria" -ForegroundColor $color
+          
+         }
+#Using Write-Host to show the flag and foreground, Background color to display
+        "Colombia"{
+        Write-Output "Below is the Colombia flag:"
+            Write-Host "CCCCCC" -ForegroundColor Yellow -BackgroundColor Yellow
+            Write-Host "CCCCCC" -ForegroundColor Yellow -BackgroundColor Yellow
+            Write-Host "CCCCCC" -ForegroundColor DarkBlue -BackgroundColor DarkBlue
+            Write-Host "CCCCCC" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "Colombian carnivals are so popular in the world. The Bandeja Paisa is a most famous dish in Colombia" -ForegroundColor $color
+        }
+#Using Write-Host to show the flag and foreground, Background color to display
+        "Laos"{
+        Write-Output "Below is the Laos flag:"
+            Write-Host "#######" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "###" -ForegroundColor DarkBlue -BackgroundColor DarkBlue -NoNewline
+            write-Host "@" -ForegroundColor White -BackgroundColor White -NoNewline
+            Write-Host "###" -ForegroundColor DarkBlue -BackgroundColor DarkBlue 
+            Write-Host "#######" -ForegroundColor Red -BackgroundColor Red 
+            Write-Host "Laos is famous for lush landscape. The mekaong river , one of world's most important river is here." -ForegroundColor $color
+
+        }
+#Using Write-Host to show the flag and foreground, Background color to display
+        "Mali"{
+        Write-Output "Below is the Mali flag:"
+            Write-Host "M" -ForegroundColor Green -BackgroundColor Green -NoNewline
+            Write-Host "M" -ForegroundColor Yellow -BackgroundColor Yellow -NoNewline
+            Write-Host "M" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "Mali is home to part of the Sahara desert, the largest desert in the world." -ForegroundColor $color
+            }
+#Using Write-Host to show the flag and foreground, Background color to display
+        "Sierra Leone"{
+        Write-Output "Below is the Sierra Leone flag:"
+            Write-Host "SSSSS" -ForegroundColor Green -BackgroundColor Green 
+            Write-Host "SSSSS" -ForegroundColor White -BackgroundColor White 
+            Write-Host "SSSSS" -ForegroundColor Blue -BackgroundColor Blue
+            Write-Host "Sierra Leone is called as The Land of Diamonds!" -ForegroundColor $color
+            }
+#Using Write-Host to show the flag and foreground, Background color to display
+        "Germany"{
+        Write-Output "Below is the Germany flag:"
+            Write-Host "GGGGG" -ForegroundColor Black -BackgroundColor Black
+            Write-Host "GGGGG" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "GGGGG" -ForegroundColor Yellow -BackgroundColor Yellow
+            Write-Host "Germany is famous for its Autobahn, a highway stretching 8,073 miles" -ForegroundColor $color
+            }
+#Using Write-Host to show the flag and foreground, Background color to display
+        "Canada"{
+        Write-Output "Below is the Canada flag:"
+            Write-Host "CC" -ForegroundColor Red -BackgroundColor Red -NoNewline
+            Write-Host "     " -ForegroundColor White -BackgroundColor White -NoNewline
+            Write-Host "CC" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "CC" -ForegroundColor Red -BackgroundColor Red -NoNewline
+            Write-Host " CCC " -ForegroundColor Red -BackgroundColor White -NoNewline
+            Write-Host "CC" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "CC" -ForegroundColor Red -BackgroundColor Red -NoNewline
+            Write-Host "     " -ForegroundColor White -BackgroundColor White -NoNewline
+            Write-Host "CC" -ForegroundColor Red -BackgroundColor Red
+            Write-Host "Ice hockey is so popular in Canada. Most beautiful places on earth reside in Canada" -ForegroundColor $color
+            }        
+    }
+     
+}
+Write-Output $fac
+
+#call the function
+Get-CountryFlag "Austria"
+Get-CountryFlag "Colombia"
+Get-CountryFlag "Laos"
+Get-CountryFlag "Mali"
+Get-CountryFlag "Sierra Leone"
+Get-CountryFlag "Germany"
+Get-CountryFlag "Canada"
+
+# Calculator Function
+
+<#
+.SYNOPSIS
+    This PowerShell script implements a rudimentary calculator function.
+
+.DESCRIPTION
+    The script provides a simple calculator functionality to perform basic arithmetic operations such as addition, subtraction, multiplication, division, and modulus.
+    Users are prompted to choose between evaluating a math expression or exiting the program. 
+    The script also includes some creative elements like displaying smiley emojis and math-related jokes.
+
+.VARIABLES
+$Country: Stores the name of the country passed as a parameter to the Get-CountryFlag function.
+$color: Stores a randomly generated number between 1 and 13, used to determine the color of the output text.
+$joke: Stores a randomly selected math-related joke from the $mathjoke array.
+$number1 and $number2: Parameters representing the two numbers used in mathematical operations.
+$operator: Parameter representing the arithmetic operator (+, -, *, /, %) used in mathematical operations.
+$choice: Stores the user's choice (1 or 2) from the menu.
+$col1: Stores a randomly generated number between 1 and 13, used to determine the color of the welcome message in the calculator menu.
+$EmojiIcon and $EmojiIcon1: Store Unicode values of smiley emojis used in the output.
+$answer: Stores the result of the mathematical operation performed in the Evaluate-math function.
+
+.REFERENCES
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions?view=powershell-7.4&viewFallbackFrom=powershell-7.1
+https://www.powershellcenter.com/2021/02/19/add-emojis-to-powershell-output/
+#>
+
+
+
+# Calculator Function
+
+<#
+.SYNOPSIS
+    This PowerShell script implements a rudimentary calculator function.
+
+.DESCRIPTION
+    The script provides a simple calculator functionality to perform basic arithmetic operations such as addition, subtraction, multiplication, division, and modulus.
+    Users are prompted to choose between evaluating a math expression or exiting the program. 
+    The script also includes some creative elements like displaying smiley emojis and math-related jokes.
+
+.VARIABLES
+$Country: Stores the name of the country passed as a parameter to the Get-CountryFlag function.
+$color: Stores a randomly generated number between 1 and 13, used to determine the color of the output text.
+$joke: Stores a randomly selected math-related joke from the $mathjoke array.
+$number1 and $number2: Parameters representing the two numbers used in mathematical operations.
+$operator: Parameter representing the arithmetic operator (+, -, *, /, %) used in mathematical operations.
+$choice: Stores the user's choice (1 or 2) from the menu.
+$col1: Stores a randomly generated number between 1 and 13, used to determine the color of the welcome message in the calculator menu.
+$EmojiIcon and $EmojiIcon1: Store Unicode values of smiley emojis used in the output.
+$answer: Stores the result of the mathematical operation performed in the Evaluate-math function.
+
+.REFERENCES
+https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions?view=powershell-7.4&viewFallbackFrom=powershell-7.1
+https://www.powershellcenter.com/2021/02/19/add-emojis-to-powershell-output/
+#>
+
+
+
+#Function for perform calculation
+
+function Evaluate-math {      
+
+#Functions with Parameters(Ref:https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions?view=powershell-7.4&viewFallbackFrom=powershell-7.1              
+    
+    param(
+     [double]$number1,
+     [double]$number2
+     )
+
+     switch ($operator) {
+     "+" {$number1 + $number2}
+     "-" {$number1 - $number2}
+     "*" {$number1 * $number2}
+     "/" {$number1 / $number2}
+     "%" {$number1 % $number2}
+     }
+     }
+     
+Write-Host "Math Calculator"
+Write-Host "Rudimentary Menu:"
+    Write-Host "1. Evaluate a math expression"
+    Write-Host "2. Exit"
+
+$choice = Read-Host "Enter your choice (1 or 2)"
+$col1= Get-Random -Minimum 1 -Maximum 13
+
+switch ($choice) {
+1 {
+ 
+ write-Host "Welcome to the Calculator" -ForegroundColor $col1 -NoNewline
+
+  # Creativity: Display smiley emoji (Ref: https://www.powershellcenter.com/2021/02/19/add-emojis-to-powershell-output/) 
+
+ $EmojiIcon = [System.Convert]::toInt32("1F600", 16)
+Write-Host -ForegroundColor yellow ([System.Char]::ConvertFromUtf32($EmojiIcon)) 
+
+
+
+$answer = Evaluate-math -number1 $number1 -number2 $number2 -operator $operator
+
+
+Write-Host "Answer: $answer" -ForegroundColor Blue -BackgroundColor Gray
+
+Evaluate-math
+}
+
+
+2 {
+Write-Host "Exiting..." -ForegroundColor DarkCyan
+Write-Host "Good bye" -ForegroundColor DarkCyan -NoNewline
+$EmojiIcon1 = [System.Convert]::toInt32("1F61E", 16)
+Write-Host -ForegroundColor DarkYellow ([System.Char]::ConvertFromUtf32($EmojiIcon1)) 
+
+}
+default {
+Write-Host "Invalid choice.Please enter 1 or 2" -ForegroundColor Red
+Evaluate-math
+}
+}
+
+
+ # Creativity: Define an array of math-related jokes
+
+$mathjoke = @(
+ "What do mathematicians do when they're hungry? They make Pi."
+ "How do you solve any equation? Multiply both sides by zero."
+ "How do you make seven an even number? Remove the S."
+ "What’s an opinion without 3.14159? An onion."
+ "Who is the king of school supplies? The ruler."
+ )
+
+ # Creativity: Randomly select a joke and a color
+
+ $joke = $mathjoke | Get-Random
+ $color = Get-Random -Minimum 1 -Maximum 13
+
+ # Creativity: Display the joke in a random color
+
+ Write-Host "Math joke:" -ForegroundColor $color
+ Write-Host $joke 
+
+ #call the function
+ Evaluate-math
+
+
+    
+
+
+
+   
+  
+   

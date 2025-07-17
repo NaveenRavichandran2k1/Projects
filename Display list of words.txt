@@ -1,0 +1,115 @@
+﻿<#
+.VERSION
+    1.0
+
+.AUTHOR
+    NAVEEN RAVICHANDRAN
+
+.SYNOPSIS
+    Display list of words 
+
+.DESCRIPTION
+    This script create file, Save the user name, shows Welcome message, ask user to enter the words, and shows the output with seconds and milliseconds.
+
+#>
+
+
+
+
+#Defining variables
+
+ $Filelocation= "C:\PS_assignment"
+ $usernamefile="$Filelocation\username.txt" 
+ $wordlistname= "$Filelocation\word_list.txt"
+
+
+#Creating new folder to store files
+
+   if(-not (Test-Path $Filelocation))
+ { 
+   New-item -path $Filelocation -Itemtype "directory"
+ }
+
+#Prompt User for their Name and store it in a file. It also check the file is present or not
+
+ $username =Read-Host 'Enter your name'
+
+   if (Test-Path $usernamefile)
+ {
+   $Decision= Read-Host "The file is already present. Do you want to delete it ? yes or no"
+
+   if ($Decision -eq "yes")
+ {
+   remove-item $usernamefile
+
+   Write-host "File Deleted" -ForegroundColor White -BackgroundColor Red
+ }
+   else
+ {
+   Write-Host "The script will halt" -ForegroundColor Red
+
+  break
+ }
+ }
+
+#Show a welcome message with user's name
+
+ $username | Out-File -FilePath $usernamefile
+
+ $displayname =Get-Content $usernamefile
+
+Write-host "Greetings $displayname!" -ForegroundColor Gray
+
+#Ask user to enter the words and display the words
+
+ $wordlist = 0
+
+while ($wordlist -lt 7)
+{
+    $wordlist++
+
+    $word= Read-host "Enter word #$wordlist"
+
+    $word |Out-File -FilePath $wordlistname -Append
+}
+
+
+write-host " wordlist: " -foregroundcolor Blue -Backgroundcolor White
+
+$outputwords = get-content $wordlistname
+
+for ($n=0;$n -lt $outputwords.Count; $n++)
+
+{
+
+write-host "$($n+1) $($outputwords[$n]) "
+
+}
+
+#Prompt user to remove the wordlist
+
+$removeconfirmation = Read-Host "would you like to remove the wordlist? enter yes or no"
+
+  if($removeconfirmation -eq "yes")
+{
+remove-item $wordlistname
+write-host "File is deleted" -ForegroundColor DarkRed
+
+}
+
+  else  
+{
+ write-host "file is not deleted" -ForegroundColor Red
+}
+
+#Display the time in seconds and milliseconds
+
+$time= Get-Date
+
+$sec=$time.Second
+
+$milsec=$time.Millisecond
+
+write-host "$sec Seconds" -ForegroundColor Red -NoNewline
+
+Write-host ", $milsec Milliseconds" -ForegroundColor Green
